@@ -1,1 +1,1 @@
-хуй
+#Java course
