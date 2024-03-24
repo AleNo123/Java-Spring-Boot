@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
-    List<Course> findDistinctByTitle(String title);
+    List<Course> findByTitleContaining(String title);
 }

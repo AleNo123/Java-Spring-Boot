@@ -1,25 +1,16 @@
 package com.example.javaProj.controller;
 
-import com.example.javaProj.DTO.ApiError;
-import com.example.javaProj.DTO.ArgumentError;
 import com.example.javaProj.DTO.CourseDTO;
-import com.example.javaProj.model.Course;
 import com.example.javaProj.service.CourseService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/course")
@@ -32,7 +23,7 @@ public class CourseController{
         this.service = service;
     }
     @GetMapping("/search")
-    public List<Course> getAllByTitle(@Valid @RequestParam String title){
+    public List<CourseDTO> getAllByTitle(@Valid @RequestParam String title){
         return service.getAllByTitle(title);
     }
     @GetMapping("/{id}")
@@ -40,7 +31,7 @@ public class CourseController{
         return service.getById(id);
     }
     @GetMapping
-    public List<Course> getAll(){
+    public List<CourseDTO> getAll(){
         return service.getAll();
     }
     @PostMapping
@@ -57,12 +48,5 @@ public class CourseController{
     public void delete(@PathVariable("id") Long id){
         service.delete(id);
     }
-//    @ExceptionHandler
-//    public ResponseEntity<ArgumentError> MethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-//        return new ResponseEntity<>(
-//                new ArgumentError(ex.getMessage()),
-//                HttpStatus.BAD_REQUEST
-//        );
-//    }
 }
 // curl --header "Content-Type: application/json"   --request POST   --data '{"title": "title", "author": "author"}'   http://172.19.208.1:8080/course

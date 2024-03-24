@@ -10,7 +10,7 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotBlank
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     private String title;
     @NotNull
     @Column(name = "author")
