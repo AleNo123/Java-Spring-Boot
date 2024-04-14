@@ -1,9 +1,13 @@
 package com.example.javaProj.DTO;
 
 import com.example.javaProj.model.Course;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class CourseDTO {
+    @NotBlank
     private String title;
+    @NotNull
     private String author;
     public CourseDTO(String title,String author){
         this.title=title;

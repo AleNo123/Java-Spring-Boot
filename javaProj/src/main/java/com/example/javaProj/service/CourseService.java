@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-
 @Service
 public class CourseService {
     private final CourseRepository repository;
@@ -17,13 +16,11 @@ public class CourseService {
     public CourseDTO getById(Long id){
         return new CourseDTO(repository.getReferenceById(id));
     }
-    public List<CourseDTO> getAllByTitle(String title){
-        List<Course> courses = repository.findByTitleContaining(title);
-        return courses.stream().map(CourseDTO::new).collect(Collectors.toList());
+    public List<Course> getAllByTitle(String title){
+        return repository.findByTitleContaining(title);
     }
-    public List<CourseDTO> getAll(){
-        List<Course> courses = repository.findAll();
-        return courses.stream().map(CourseDTO::new).collect(Collectors.toList());
+    public List<Course> getAll(){
+        return repository.findAll();
     }
     public void delete(Long id){
         repository.deleteById(id);

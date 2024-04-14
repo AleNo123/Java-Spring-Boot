@@ -1,6 +1,7 @@
 package com.example.javaProj.controller;
 
 import com.example.javaProj.DTO.CourseDTO;
+import com.example.javaProj.model.Course;
 import com.example.javaProj.service.CourseService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -9,8 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/course")
@@ -23,7 +25,7 @@ public class CourseController{
         this.service = service;
     }
     @GetMapping("/search")
-    public List<CourseDTO> getAllByTitle(@Valid @RequestParam String title){
+    public List<Course> getAllByTitle(@Valid @RequestParam String title){
         return service.getAllByTitle(title);
     }
     @GetMapping("/{id}")
@@ -31,10 +33,10 @@ public class CourseController{
         return service.getById(id);
     }
     @GetMapping
-    public List<CourseDTO> getAll(){
+    public List<Course> getAll(){
         return service.getAll();
     }
-    @PostMapping
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@Valid @RequestBody CourseDTO request){
         logger.debug(String.valueOf(request));

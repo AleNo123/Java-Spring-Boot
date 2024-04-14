@@ -1,22 +1,22 @@
 package com.example.javaProj.DTO;
 
-import com.example.javaProj.model.Course;
-
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ApiError {
-    private String message;
-    private OffsetDateTime dateOccurred;
+    private final String message;
+    private final OffsetDateTime dateOccurred;
 
     public String getMessage() {
         return message;
     }
 
-    public OffsetDateTime getDateOccurred() {
-        return dateOccurred;
+    public String getDateOccurred() {
+        return dateOccurred.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a"));
     }
 
     public ApiError(String message, OffsetDateTime dateOccurred){
         this.message=message;
+        this.dateOccurred=dateOccurred;
     }
 }
