@@ -13,22 +13,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "FROM Profile profile " +
             "WHERE profile.profileId NOT IN (SELECT DISTINCT post.profile.profileId FROM Post post)")
     int getCountProfileWithoutPost();
-//    @Query("SELECT post.id FROM Post post " +
-//            "WHERE (SELECT COUNT(comment) FROM post.comments comment) = 2 " +
-//            "AND SUBSTRING(post.title, 1, 1) BETWEEN '0' AND '9' " +
-//            "AND LENGTH(post.content) > 20 " +
-//            "ORDER BY post.id ASC")
-//    public List<Long> getPostIdWithFilter();
-//    @Query("SELECT post_id " +
-//            "FROM Post post " +
-//            "WHERE post_id IN ( " +
-//            "    SELECT post_id " +
-//            "    FROM Comment comment " +
-//            "    GROUP BY post_id " +
-//            "    HAVING COUNT(*) <= 1 " +
-//            ") " +
-//            "OR post_id NOT IN (SELECT DISTINCT post_id FROM Comment comment) " +
-//            "ORDER BY post_id " +
-//            "LIMIT 3")
-//    public List<Long> get3PostIdWithoutComment();
+@Query("SELECT post.postId FROM Post post " +
+        "WHERE LENGTH(post.content) > 20 " +
+        "AND SUBSTRING(post.title, 1, 1) IN ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9') " +
+        "AND (SELECT COUNT(comment) FROM Comment comment WHERE comment.post = post) = 2 " +
+        "ORDER BY post.postId ASC")
+     List<Long> getPostIdWithFilter();
+    @Query("SELECT post.postId FROM Post post " +
+            "WHERE (SELECT COUNT(comment) FROM Comment comment WHERE comment.post = post) <= 1 " +
+            "ORDER BY post.postId ASC " +
+            "LIMIT 3")
+     List<Long> get3PostIdWithoutComment();
 }

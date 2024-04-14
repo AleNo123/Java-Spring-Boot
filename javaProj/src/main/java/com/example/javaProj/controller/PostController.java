@@ -1,7 +1,6 @@
 package com.example.javaProj.controller;
 
 import com.example.javaProj.model.Post;
-import com.example.javaProj.model.Profile;
 import com.example.javaProj.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,12 +28,12 @@ public class PostController {
     public int getCountProfileWithoutPost(){
         return service.getCountProfileWithoutPost();
     }
-//    @GetMapping("/filter")
-//    public List<Long> getPostIdWithFilter(){
-//        return service.getPostIdWithFilter();
-//    }
-//    @GetMapping("/3id")
-//    public List<Long> get3PostIdWithoutComment(){
-//        return service.get3PostIdWithoutComment();
-//    }
+    @GetMapping("/filter")
+    public List<Long> getPostIdWithFilter(){
+        return service.getPostIdWithFilter();
+    }
+    @GetMapping("/3id")
+    public List<Long> get3PostIdWithoutComment(){
+        return service.get3PostIdWithoutComment();
+    }
 }

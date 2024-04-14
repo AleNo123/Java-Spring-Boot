@@ -23,10 +23,10 @@ public class PostService {
         return repository.findAll();
     }
 
-//    public List<Long> getPostIdWithFilter() {
-//        return repository.getPostIdWithFilter();
-//    }
-//    public List<Long> get3PostIdWithoutComment() {
-//        return repository.get3PostIdWithoutComment();
-//    }
+    public List<Long> getPostIdWithFilter() {
+        return repository.getPostIdWithFilter();
+    }
+    public List<Long> get3PostIdWithoutComment() {
+        return repository.get3PostIdWithoutComment();
+    }
 }
