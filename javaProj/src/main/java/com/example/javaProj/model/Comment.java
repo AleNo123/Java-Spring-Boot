@@ -9,7 +9,25 @@ import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "comment")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "comment-entity-graph-with-profile_id-post_id",
+                attributeNodes = {
+                        @NamedAttributeNode(value = "profile"),
+                        @NamedAttributeNode(value = "post",subgraph = "comments-subgraph-post"),
+                },
+                subgraphs = {
+                @NamedSubgraph(
+                        name = "comments-subgraph-post",
+                        attributeNodes = {
+                                @NamedAttributeNode(value = "profile"),
+                        }
+                )
+        }
+        ),
+        @NamedEntityGraph(name = "comment-entity-graph")
+})
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

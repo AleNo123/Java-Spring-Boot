@@ -7,7 +7,7 @@ import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "profile")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

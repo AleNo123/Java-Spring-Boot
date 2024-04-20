@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class Course {
+public class Course { //Пока старое из первого задания
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

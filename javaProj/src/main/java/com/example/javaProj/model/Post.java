@@ -9,7 +9,16 @@ import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "post")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "post-entity-graph-with-profile_id",
+                attributeNodes = {
+                        @NamedAttributeNode(value = "profile"),
+                }
+        ),
+        @NamedEntityGraph(name = "post-entity-graph")
+})
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
