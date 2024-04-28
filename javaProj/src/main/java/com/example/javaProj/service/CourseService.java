@@ -31,7 +31,6 @@ public class CourseService {
     public void set(Long id, CourseDTO courseDTO){
         Course course = repository.findById(id).orElseThrow(() -> new NoSuchElementException("Course not found with id: " + id));
         course.setTitle(courseDTO.getTitle());
-        course.setAuthor(courseDTO.getAuthor());
         repository.save(course);
     }
 }

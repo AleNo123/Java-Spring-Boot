@@ -10,7 +10,7 @@ public enum AccessRights {
     Guest("Guest");
     private String role;
     AccessRights (String role){
-        this.role = "ROLE_"+role;
+        this.role = role;
     }
 //    AccessRights getFromUser(User user){
 //        return AccessRights(user.get)
