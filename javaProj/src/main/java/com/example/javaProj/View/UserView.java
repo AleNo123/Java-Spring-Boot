@@ -2,6 +2,7 @@ package com.example.javaProj.View;
 
 
 import com.example.javaProj.model.Course;
+import com.example.javaProj.model.File;
 
 import java.util.Set;
 
@@ -14,7 +15,7 @@ public interface UserView {
 
      String getSurname();
 
-     String getPathToUserIcon();
+     File getAvatar();
 
      Set<CourseNameView> getCourses();
 }

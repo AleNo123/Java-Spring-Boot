@@ -1,44 +1,48 @@
 package com.example.javaProj.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "module")
-@SequenceGenerator(name = "module_seq", sequenceName = "module_seq", allocationSize = 1)
-public class Module {
+public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "module_seq")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotNull
+    @NotBlank
+    private String type;
+    @NotNull
+    @NotBlank
     private String name;
     @NotNull
-    private String content;
-    private Boolean isDeleted = false;
-    @NotNull
-    @Column(name = "description") // Новые поля
+    @NotBlank
     private String description;
+    private Boolean isDeleted = false;
     @CreationTimestamp
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime dateCreation;
     @UpdateTimestamp
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime dateChanging;
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_creator_id")
+    @JoinColumn(name = "user_creator_id")
     private User userCreater;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_changer_id")
+    @JoinColumn(name = "user_changer_id")
     private User userChanger;
     @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime dateDeleting;
@@ -47,10 +51,12 @@ public class Module {
     private User userDeleter;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Course course;
+    private Topic topic;
     @ManyToOne(fetch = FetchType.LAZY)
     private Report report;
-
-    @OneToMany(mappedBy = "module", fetch = FetchType.LAZY)
-    private List<Topic> topic;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "content_id")
+    private Content content;
+    @OneToOne(fetch = FetchType.LAZY)
+    private Mark mark;
 }

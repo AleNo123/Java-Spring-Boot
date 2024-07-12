@@ -1,13 +1,19 @@
 package com.example.javaProj.DTO;
 
+import com.example.javaProj.View.CourseNameView;
 import com.example.javaProj.model.Course;
 import com.example.javaProj.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
+@NoArgsConstructor
+@Data
 public class UserResponseDTO {
 
     private Long userId;
@@ -22,48 +28,28 @@ public class UserResponseDTO {
     private String surname;
     @NotBlank
     private String pathToUserIcon;
-    private Set<Course> courses;
+    @NotBlank
+    private String fileType;
+    private Set<CourseNameView> courses;
 
-    public UserResponseDTO(Long userId, String nickname, String name, String surname, String pathToUserIcon, Set<Course> courses) {
+    public UserResponseDTO(Long userId, String nickname, String name, String surname, String pathToUserIcon,
+                           String fileType, Set<CourseNameView> courses) {
         this.userId = userId;
         this.nickname = nickname;
         this.name = name;
+        this.fileType = fileType;
         this.surname = surname;
         this.pathToUserIcon = pathToUserIcon;
         this.courses = courses;
     }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public String getPathToUserIcon() {
-        return pathToUserIcon;
-    }
-
-    public Set<Course> getCourses() {
-        return courses;
-    }
-
     public UserResponseDTO(User user){
         this.userId = user.getUserId();
         this.nickname =user.getNickname();
         this.name =user.getName();
         this.surname = user.getSurname();
-        this.pathToUserIcon = user.getPathToUserIcon();
-        this.courses = user.getCourses();
+        this.pathToUserIcon = user.getAvatar().getFilePath();
+        this.pathToUserIcon = user.getAvatar().getFileType();
+        this.courses = user.getCourses().stream().map(course -> (CourseNameView) ()  -> course.getTitle()).collect(Collectors.toSet());
     }
     @Override
     public String toString() {

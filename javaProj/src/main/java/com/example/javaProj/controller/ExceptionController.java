@@ -3,8 +3,10 @@ package com.example.javaProj.controller;
 import com.example.javaProj.DTO.ApiError;
 import com.example.javaProj.DTO.ArgumentError;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -24,7 +26,7 @@ public class ExceptionController {
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ArgumentError> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ArgumentError> handleValidationExceptions(MethodArgumentNotValidException ex, Model model) {
         ArgumentError argumentError = new ArgumentError(ex.getMessage());
         return new ResponseEntity<>(argumentError, HttpStatus.BAD_REQUEST);
     }
@@ -39,5 +41,9 @@ public class ExceptionController {
     public ResponseEntity<ArgumentError> handleMissingParameterException(EntityNotFoundException ex) {
         ArgumentError argumentError = new ArgumentError(ex.getMessage());
         return new ResponseEntity<>(argumentError, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("User with the same nickname or email address already exists");
     }
 }

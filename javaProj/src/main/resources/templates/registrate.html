@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Registration Form</title>
+</head>
+<body>
+<h2>User Registration Form</h2>
+<form id="registrationForm" action="registration" method="post" th:object="${request}">
+  <!-- Токен CSRF -->
+  <!-- Assuming your server generates and populates these values -->
+  <input type="hidden" id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+  <!-- Остальные поля формы -->
+  <div>
+    <label for="nickname">Nickname:</label>
+    <input type="text" id="nickname" name="nickname" required minlength="4" maxlength="25">
+  </div>
+<!--  <div>-->
+<!--    <label for="name">Name:</label>-->
+<!--    <input type="text" id="name" name="name" required minlength="3" maxlength="30">-->
+<!--  </div>-->
+<!--  <div>-->
+<!--    <label for="surname">Surname:</label>-->
+<!--    <input type="text" id="surname" name="surname" required minlength="3" maxlength="30">-->
+<!--  </div>-->
+  <div>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required minlength="8" maxlength="30">
+  </div>
+  <div>
+    <label for="passwordCopy">PasswordCopy:</label>
+    <input type="password" id="passwordCopy" name="passwordCopy" required minlength="8" maxlength="30">
+  </div>
+  <div>
+    <label for="emailAddress">Email Address:</label>
+    <input type="email" id="emailAddress" name="emailAddress" required>
+  </div>
+  <div>
+    <small id="Error" th:if="${message}" th:text="${message}" style="color: red;"></small>
+  </div>
+  <!-- Остальные поля формы -->
+
+  <button type="submit">Submit</button>
+</form>
+</body>
+</html>

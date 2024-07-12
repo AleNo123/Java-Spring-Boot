@@ -3,14 +3,13 @@ package com.example.javaProj.Enum;
 import com.example.javaProj.model.User;
 
 public enum AccessRights {
-    Administrator("Administrator"),
-    Moderator("Moderator"),
-    Registered("Registered"),
-    Editor("Editor"),
-    Guest("Guest");
+    OWNER("OWNER"),
+    ADMIN("ADMIN"),
+    TEACHER("TEACHER"),
+    USER("USER");
     private String role;
     AccessRights (String role){
-        this.role = role;
+        this.role = "ROLE_"+role;
     }
 //    AccessRights getFromUser(User user){
 //        return AccessRights(user.get)

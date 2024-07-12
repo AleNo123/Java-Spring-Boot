@@ -1,5 +1,5 @@
 package com.example.javaProj.View;
 
-interface CourseNameView {
+public interface CourseNameView {
     String getTitle();
 }

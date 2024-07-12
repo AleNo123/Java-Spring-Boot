@@ -3,9 +3,16 @@ package com.example.javaProj.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @SequenceGenerator(name = "topic_seq", sequenceName = "topic_seq", allocationSize = 1)
 @Entity
 public class Topic {
@@ -19,120 +26,39 @@ public class Topic {
     @NotNull
     private String description;
 
-    @NotNull
-    @NotBlank
-    private String content;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Module module;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "content_id")
+    private Content content;
+    private Boolean isDeleted = false;
+    @CreationTimestamp
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime dateCreation;
+    @UpdateTimestamp
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime dateChanging;
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_creater_id")
-    private User UserCreater;
+    @JoinColumn(name="user_creator_id")
+    private User userCreater;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_changer_id")
-    private User UserChanger;
+    private User userChanger;
     @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime dateDeleting;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_deleter_id")
-    private User UserDeleter;
+    private User userDeleter;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Report report;
 
     @NotNull
     @NotBlank
-    private String task;
-
-    public Topic() {
-    }
-
-    public void setTopicId(Long topicId) {
-        this.topicId = topicId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public void setDateCreation(OffsetDateTime dateCreation) {
-        this.dateCreation = dateCreation;
-    }
-
-    public void setDateChanging(OffsetDateTime dateChanging) {
-        this.dateChanging = dateChanging;
-    }
-
-    public void setUserCreater(User userCreater) {
-        UserCreater = userCreater;
-    }
-
-    public void setUserChanger(User userChanger) {
-        UserChanger = userChanger;
-    }
-
-    public void setDateDeleting(OffsetDateTime dateDeleting) {
-        this.dateDeleting = dateDeleting;
-    }
-
-    public void setUserDeleter(User userDeleter) {
-        UserDeleter = userDeleter;
-    }
-
-    public void setTask(String task) {
-        this.task = task;
-    }
-
-    public Long getTopicId() {
-        return topicId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public OffsetDateTime getDateCreation() {
-        return dateCreation;
-    }
-
-    public OffsetDateTime getDateChanging() {
-        return dateChanging;
-    }
-
-    public User getUserCreater() {
-        return UserCreater;
-    }
-
-    public User getUserChanger() {
-        return UserChanger;
-    }
-
-    public OffsetDateTime getDateDeleting() {
-        return dateDeleting;
-    }
-
-    public User getUserDeleter() {
-        return UserDeleter;
-    }
-
-    public String getTask() {
-        return task;
-    }
+    @OneToMany(mappedBy = "topic",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Task> task;
 }
