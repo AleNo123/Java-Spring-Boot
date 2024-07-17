@@ -1,25 +1,20 @@
 package com.example.javaProj.service;
 
+import com.example.javaProj.DTO.TokenValidationResult;
 import com.example.javaProj.DTO.UserRegisterRequestDTO;
 import com.example.javaProj.DTO.UserResponseDTO;
 import com.example.javaProj.View.UserView;
 import com.example.javaProj.Enum.AccessRights;
-import com.example.javaProj.exception.PasswordMismatchException;
-import com.example.javaProj.model.File;
-import com.example.javaProj.model.Token;
 import com.example.javaProj.model.User;
-import com.example.javaProj.repository.FileRepository;
-import com.example.javaProj.repository.TokenRepository;
 import com.example.javaProj.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -27,13 +22,16 @@ public class UserService {
     private final UserRepository repository;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(UserRepository repository) {
         this.repository = repository;
     }
     public UserResponseDTO getUserById(Long id){
-//        UserResponseDTO responseDTO = repository.findById(id);
         UserView userView = repository.findUserViewByUserId(id).orElseThrow(() -> new NoSuchElementException("User not found with id: " + id));
         UserResponseDTO userResponseDTO = new UserResponseDTO(userView.getUserId(),userView.getNickname(),
                 userView.getName(), userView.getSurname(), userView.getAvatar().getFilePath(),
@@ -60,10 +58,31 @@ public class UserService {
         repository.delete(user);
     }
 
-//    public void sendConfirmEmail(String receiver, User user) throws MessagingException {
-//        String uuid = UUID.randomUUID().toString();
-//        Token token = new Token(uuid,user);
-//        emailService.sendVerificationEmail(receiver,uuid);
-//        tokenRepository.save(token);
-//    }
+    public Optional<User> findByEmail(String email){
+        return repository.findByEmailAddress(email);
+    }
+
+    public TokenValidationResult verifyUserByEmail(String token){
+        TokenValidationResult result = emailService.verifyEmail(token);
+        if(result.getUser()==null){
+            return result;
+        }else if (!result.getUser().getIsEmailConfirmed()) {
+            if (result.isValid()) {
+                result.getUser().setIsEmailConfirmed(true);
+                repository.save(result.getUser());
+            } else {
+                if (result.getUser() != null) {
+                    repository.delete(result.getUser());
+                }
+            }
+        }
+        return result;
+    }
+    public void sendVerificationEmail(String receiver, User user, String endpoint) throws MessagingException {
+        emailService.sendVerificationEmail(receiver,user,endpoint);
+    }
+    public void setPassword(String password,User user){
+        user.setPassword(passwordEncoder.encode(password));
+        repository.save(user);
+    }
 }

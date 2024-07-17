@@ -18,6 +18,7 @@
     <input type="submit" value="Log in" />
 </form>
 <a th:href="@{/user/registration}">Register</a>
+<a th:if="${error}" th:href="@{/user/forgotPassword}">Forgot Password</a>
 </body>
 
 </html>

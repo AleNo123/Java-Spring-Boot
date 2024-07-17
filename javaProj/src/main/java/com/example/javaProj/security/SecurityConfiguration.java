@@ -46,6 +46,7 @@ public class SecurityConfiguration  {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin/**").hasRole("ADMIN") //swagger-ui
                         .requestMatchers("/user/registration/**").permitAll()
+                                .requestMatchers("/user/registration").permitAll()
                         .requestMatchers("/registration").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/verify-email").permitAll()
@@ -54,6 +55,8 @@ public class SecurityConfiguration  {
                         .requestMatchers("/static/**").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/logout").permitAll()
+                                .requestMatchers("/user/forgotPassword").permitAll()
+                                .requestMatchers("/user/forgotPassword/**").permitAll()
 //                        .requestMatchers("/v2/api-docs", "/swagger-resources/**", "/webjars/**"
 //                                                   ,"/configuration/ui","/swagger-resources/**", "/configuration/security"
 //                                                    ,"/swagger-ui.html", "/webjars/**").permitAll()
