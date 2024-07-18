@@ -1,6 +1,7 @@
 package com.example.javaProj.security;
 
 import com.example.javaProj.Enum.AccessRights;
+import com.example.javaProj.exception.BlockedUserException;
 import com.example.javaProj.exception.EmailNotConfirmedException;
 import com.example.javaProj.model.User;
 import com.example.javaProj.repository.UserRepository;
@@ -19,6 +20,8 @@ import java.util.Collections;
 public class UserAuthService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    @Autowired
+    public LoginAttemptService loginAttemptService;
 
     @Autowired
     public UserAuthService(UserRepository userRepository) {
@@ -32,6 +35,9 @@ public class UserAuthService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
         if (!user.getIsEmailConfirmed()) {
             throw new EmailNotConfirmedException("Email is not confirmed");
+        }
+        if (loginAttemptService.isBlocked()) {
+            throw new BlockedUserException("You have been blocked due to too many failed login attempts");
         }
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getNickname())
