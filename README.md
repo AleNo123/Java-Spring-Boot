@@ -1,1 +1,1 @@
-#Java course хуй
+#Spring Boot application in Alex branch
