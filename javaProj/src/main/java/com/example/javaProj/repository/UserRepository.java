@@ -17,6 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long> { ;
     @EntityGraph(value = "user-with-courses")
     Optional<UserView> findUserViewByUserId(Long id);
 
+    @EntityGraph(value = "user-with-courses")
+    Optional<UserView> findUserViewByNickname(String nickname);
     Optional<User> findByName(String name);
     Optional<User> findByNickname(String nickname);
     Optional<User> findByEmailAddress(String nickname);

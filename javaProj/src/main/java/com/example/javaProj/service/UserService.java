@@ -1,10 +1,12 @@
 package com.example.javaProj.service;
 
 import com.example.javaProj.DTO.TokenValidationResult;
+import com.example.javaProj.DTO.UserDTO;
 import com.example.javaProj.DTO.UserRegisterRequestDTO;
 import com.example.javaProj.DTO.UserResponseDTO;
 import com.example.javaProj.View.UserView;
 import com.example.javaProj.Enum.AccessRights;
+import com.example.javaProj.model.File;
 import com.example.javaProj.model.User;
 import com.example.javaProj.repository.UserRepository;
 import jakarta.mail.MessagingException;
@@ -13,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -33,11 +36,30 @@ public class UserService {
     }
     public UserResponseDTO getUserById(Long id){
         UserView userView = repository.findUserViewByUserId(id).orElseThrow(() -> new NoSuchElementException("User not found with id: " + id));
-        UserResponseDTO userResponseDTO = new UserResponseDTO(userView.getUserId(),userView.getNickname(),
-                userView.getName(), userView.getSurname(), userView.getAvatar().getFilePath(),
-                userView.getAvatar().getFileType(),userView.getCourses());
 
-        return userResponseDTO;
+        return new UserResponseDTO(userView);
+    }
+    public UserResponseDTO getUserByNickname(String nickname){
+        UserView userView = repository.findUserViewByNickname(nickname).orElseThrow(() -> new NoSuchElementException("User not found with nickname: " + nickname));
+
+        return new UserResponseDTO(userView);
+    }
+    public void updateUser(UserDTO userDto, String nickname){
+        User user = repository.findByNickname(nickname).orElseThrow();
+        user.setName(userDto.getName());
+        user.setSurname(userDto.getSurname());
+        user.setContactLinks(userDto.getContactLinks());
+        // Если файл присутствует, сохранить его и обновить путь к аватару пользователя
+        if (userDto.getFile() != null && !userDto.getFile().isEmpty()) {
+            if(!userDto.getFile().getContentType().equals("jpg")){
+                throw new RuntimeException("Wrong file type. Use \"jpg\"");
+            }
+            File avatar = fileService.store(userDto.getFile());
+            fileService.delete(user.getAvatar());
+            user.setAvatar(avatar);
+            repository.save(user);
+        }
+
     }
     public User createUser(UserRegisterRequestDTO requestDTO, PasswordEncoder passwordEncoder){
         if (repository.existsByNickname(requestDTO.getNickname())) {

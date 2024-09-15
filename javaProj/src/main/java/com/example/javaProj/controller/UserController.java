@@ -6,10 +6,13 @@ import com.example.javaProj.DTO.UserRegisterRequestDTO;
 import com.example.javaProj.DTO.UserResponseDTO;
 import com.example.javaProj.View.UserView;
 import com.example.javaProj.model.User;
+import com.example.javaProj.response.ApiResponse;
 import com.example.javaProj.security.RegistrationRequest;
 import com.example.javaProj.service.EmailService;
 import com.example.javaProj.service.UserService;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -27,6 +30,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.RedirectView;
@@ -59,49 +63,64 @@ public class UserController {
             return "User not authorized";
         }
     }
-    @GetMapping("/logout")
-    public String logout(Authentication authentication){
-        SecurityContextHolder.clearContext();
-        return "redirect:/login?logout";
-    }
-    @GetMapping("/{id}")
-    public String getUserById(@PathVariable("id") Long id,Model model){
-        UserResponseDTO userResponseDTO = service.getUserById(id);
-        model.addAttribute("user", userResponseDTO);
-        return "profile";
-    }
+//    @GetMapping("/logout")
+//    public String logout(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+//        request.logout();
+//        SecurityContextHolder.clearContext();
+//        return "redirect:/login?logout";
+//    }
     @GetMapping("/registration")
     public String registration(Model model){
         RegistrationRequest request = new RegistrationRequest();
         model.addAttribute(request);
         return "registrate";
     }
-
     @PostMapping("/registration")
+    @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public String createUser(@Valid @ModelAttribute UserRegisterRequestDTO requestDTO, BindingResult bindingResult, Model model)  {
-        if(bindingResult.hasErrors()){
+    public ResponseEntity<ApiResponse> createUser(@Valid @ModelAttribute UserRegisterRequestDTO requestDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             for (final ObjectError objectError : bindingResult.getAllErrors()) {
-                System.out.println(objectError.getDefaultMessage());
-                model.addAttribute("message",objectError.getDefaultMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(true, objectError.getDefaultMessage()));
             }
-            return "registrate";
         }
         User user = null;
         try {
             user = service.createUser(requestDTO, passwordEncoder);
-            service.sendVerificationEmail(user.getEmailAddress(),user,"verify-email");
-        } catch (DataIntegrityViolationException exception){
-            model.addAttribute("message",exception.getMessage());
-            return "registrate";
+            service.sendVerificationEmail(user.getEmailAddress(), user, "verify-email");
+        } catch (DataIntegrityViolationException exception) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(true,exception.getMessage()));
         } catch (MessagingException e) {
-            model.addAttribute("message",e.getMessage());
             service.deleteUser(user);
-            return "registrate";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse(true,e.getMessage()));
         }
-        model.addAttribute("message","You have received a confirmation email");
-        return "registrate";
+        return ResponseEntity.ok(new ApiResponse(false,"You have received a confirmation email"));
     }
+//    @PostMapping("/registration")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public String createUser(@Valid @ModelAttribute UserRegisterRequestDTO requestDTO, BindingResult bindingResult, Model model)  {
+//        if(bindingResult.hasErrors()){
+//            for (final ObjectError objectError : bindingResult.getAllErrors()) {
+//                System.out.println(objectError.getDefaultMessage());
+//                model.addAttribute("message",objectError.getDefaultMessage());
+//            }
+//            return "registrate";
+//        }
+//        User user = null;
+//        try {
+//            user = service.createUser(requestDTO, passwordEncoder);
+//            service.sendVerificationEmail(user.getEmailAddress(),user,"verify-email");
+//        } catch (DataIntegrityViolationException exception){
+//            model.addAttribute("message",exception.getMessage());
+//            return "registrate";
+//        } catch (MessagingException e) {
+//            model.addAttribute("message",e.getMessage());
+//            service.deleteUser(user);
+//            return "registrate";
+//        }
+//        model.addAttribute("message","You have received a confirmation email");
+//        return "registrate";
+//    }
     @ResponseBody
     @PutMapping("/{id}")
     public void changeUser(@Valid @RequestBody UserRegisterRequestDTO requestDTO, @Valid @PathVariable(name = "id") long id){

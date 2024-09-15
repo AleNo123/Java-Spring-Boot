@@ -15,7 +15,6 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/course")
 @EnableWebMvc
 public class CourseController{
     private final CourseService service;
@@ -28,27 +27,27 @@ public class CourseController{
     public List<Course> getAllByTitle(@Valid @RequestParam String title){
         return service.getAllByTitle(title);
     }
-    @GetMapping("/{id}")
-    public CourseDTO getById(@PathVariable("id") Long id){
-        return service.getById(id);
-    }
-    @GetMapping
-    public List<Course> getAll(){
-        return service.getAll();
-    }
-    @PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@Valid @RequestBody CourseDTO request){
-        logger.debug(String.valueOf(request));
-        service.create(request);
-    }
-    @PutMapping("/{id}")
-    public void set(@PathVariable("id") Long id,@Valid @RequestBody CourseDTO request){
-        service.set(id,request);
-    }
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id){
-        service.delete(id);
-    }
+//    @GetMapping("/{id}")
+//    public CourseDTO getById(@PathVariable("id") Long id){
+//        return service.getById(id);
+//    }
+//    @GetMapping
+//    public List<Course> getAll(@PathVariable("page") int page,@PathVariable("size") int size){
+//        return service.getAll(page,size);
+//    }
+//    @PostMapping("/create")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public void create(@Valid @RequestBody CourseDTO request){
+//        logger.debug(String.valueOf(request));
+//        service.create(request);
+//    }
+//    @PutMapping("/{id}")
+//    public void set(@PathVariable("id") Long id,@Valid @RequestBody CourseDTO request){
+//        service.set(id,request);
+//    }
+//    @DeleteMapping("/{id}")
+//    public void delete(@PathVariable("id") Long id){
+//        service.delete(id);
+//    }
 }
 // curl --header "Content-Type: application/json"   --request POST   --data '{"title": "title", "author": "author"}'   http://172.19.208.1:8080/course

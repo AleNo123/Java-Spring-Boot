@@ -1,6 +1,7 @@
 package com.example.javaProj.DTO;
 
 import com.example.javaProj.View.CourseNameView;
+import com.example.javaProj.View.UserView;
 import com.example.javaProj.model.Course;
 import com.example.javaProj.model.User;
 import jakarta.validation.constraints.NotBlank;
@@ -28,29 +29,43 @@ public class UserResponseDTO {
     private String surname;
     @NotBlank
     private String pathToUserIcon;
+    @NotNull
+    @NotBlank
+    private String emailAddress;
     @NotBlank
     private String fileType;
     private Set<CourseNameView> courses;
 
-    public UserResponseDTO(Long userId, String nickname, String name, String surname, String pathToUserIcon,
-                           String fileType, Set<CourseNameView> courses) {
-        this.userId = userId;
-        this.nickname = nickname;
-        this.name = name;
-        this.fileType = fileType;
-        this.surname = surname;
-        this.pathToUserIcon = pathToUserIcon;
-        this.courses = courses;
+//    public UserResponseDTO(Long userId, String nickname, String name, String surname, String pathToUserIcon,
+//                           String fileType, Set<CourseNameView> courses) {
+//        this.userId = userId;
+//        this.nickname = nickname;
+//        this.name = name;
+//        this.fileType = fileType;
+//        this.surname = surname;
+//        this.pathToUserIcon = pathToUserIcon;
+//        this.courses = courses;
+//    }
+    public UserResponseDTO(UserView userView) {
+        this.userId = userView.getUserId();
+        this.nickname = userView.getNickname();
+        this.name = userView.getName();
+        this.surname = userView.getSurname();
+        this.pathToUserIcon = userView.getAvatar().getFilePath();
+        this.fileType = userView.getAvatar().getFileType();
+        this.courses = userView.getCourses();
+        this.emailAddress = userView.getEmailAddress();
     }
-    public UserResponseDTO(User user){
-        this.userId = user.getUserId();
-        this.nickname =user.getNickname();
-        this.name =user.getName();
-        this.surname = user.getSurname();
-        this.pathToUserIcon = user.getAvatar().getFilePath();
-        this.pathToUserIcon = user.getAvatar().getFileType();
-        this.courses = user.getCourses().stream().map(course -> (CourseNameView) ()  -> course.getTitle()).collect(Collectors.toSet());
-    }
+
+//    public UserResponseDTO(User user){
+//        this.userId = user.getUserId();
+//        this.nickname =user.getNickname();
+//        this.name =user.getName();
+//        this.surname = user.getSurname();
+//        this.pathToUserIcon = user.getAvatar().getFilePath();
+//        this.pathToUserIcon = user.getAvatar().getFileType();
+//        this.courses = user.getCourses().stream().map(course -> (CourseNameView) ()  -> course.getTitle()).collect(Collectors.toSet());
+//    }
     @Override
     public String toString() {
         return "UserResponseDTO{" +
