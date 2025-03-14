@@ -9,41 +9,40 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@SequenceGenerator(name = "topic_seq", sequenceName = "topic_seq", allocationSize = 1)
 @Entity
-public class Course {
+public class Topic {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @NotBlank
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "topic_seq")
+    private Long topicId;
     @NotNull
-    @Column(name = "title")
-    private String title;
-    @Column(name = "description") // Новые поля
+    @NotBlank
+    private String name;
+    @NotNull
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Topic report;
-    @NotBlank
-    @NotNull
+    private Module module;
+
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
-    private User author;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private OffsetDateTime timeForCourse;
-
+    @JoinColumn(name = "content_id")
+    private Content content;
+    private Boolean isDeleted = false;
     @CreationTimestamp
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime dateCreation;
     @UpdateTimestamp
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime dateChanging;
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_creater_id")
+    @JoinColumn(name="user_creator_id")
     private User userCreater;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -55,21 +54,11 @@ public class Course {
     @JoinColumn(name = "user_deleter_id")
     private User userDeleter;
 
-    private Boolean isDeleted = false;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    private Rating rating;
-
-    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private List<Module> modules;
-
-    @ManyToMany(mappedBy = "courses", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    private Set<User> registratedUsers;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Report report;
 
     @NotNull
     @NotBlank
-    private String tag;
-    @NotNull
-    @NotBlank
-    private String category;
+    @OneToMany(mappedBy = "topic",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Task> task;
 }

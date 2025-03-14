@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>User Response</title>
+  <meta charset="UTF-8"/>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1>User Details</h1>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">User Information</h5>
+      <p class="card-text"><strong>User ID:</strong> <span th:text="${user.userId}"></span></p>
+      <p class="card-text"><strong>Nickname:</strong> <span th:text="${user.nickname}"></span></p>
+      <p class="card-text"><strong>Name:</strong> <span th:text="${user.name}"></span></p>
+      <p class="card-text"><strong>Surname:</strong> <span th:text="${user.surname}"></span></p>
+      <img th:src="@{${user.pathToUserIcon} + '.' + ${user.fileType}}" class="img-fluid" />
+      <h5 class="card-title">Courses</h5>
+      <ul>
+        <li th:each="course : ${user.courses}">
+          <span th:text="${course.title}"></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>
